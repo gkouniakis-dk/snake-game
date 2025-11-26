@@ -62,12 +62,20 @@ jobs:
         path: release-files
 
     - name: List artifacts
-      run: find release-files -type f
+      run: ls -R release-files/
+
+    - name: Prepare files for release
+      run: |
+        mkdir -p release-assets
+        cp release-files/snake-game-windows/* release-assets/ 2>/dev/null || true
+        cp release-files/snake-game-macos/* release-assets/ 2>/dev/null || true
+        cp release-files/snake-game-linux/* release-assets/ 2>/dev/null || true
+        ls -la release-assets/
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: release-files/**/*
+        files: release-assets/*
         draft: false
         prerelease: false
       env:
