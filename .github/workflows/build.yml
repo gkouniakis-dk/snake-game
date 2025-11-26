@@ -45,11 +45,13 @@ jobs:
         pip install pyinstaller
     - name: Build with PyInstaller
       run: pyinstaller snake_game.spec
+    - name: List dist directory
+      run: ls -la dist/
     - name: Upload macOS artifact
       uses: actions/upload-artifact@v4
       with:
         name: macos-app
-        path: dist/snake-game
+        path: dist/
 
   build-linux:
     name: Build Linux
@@ -84,23 +86,22 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: windows-exe
-        path: ./windows
+        path: ./release-files
     - name: Download macOS artifact
       uses: actions/download-artifact@v4
       with:
         name: macos-app
-        path: ./macos
+        path: ./release-files
     - name: Download Linux artifact
       uses: actions/download-artifact@v4
       with:
         name: linux-exe
-        path: ./linux
+        path: ./release-files
+    - name: List downloaded files
+      run: find ./release-files -type f
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          ./windows/snake-game.exe
-          ./macos/snake-game
-          ./linux/snake-game
+        files: ./release-files/**
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
