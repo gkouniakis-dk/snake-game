@@ -1,6 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 """PyInstaller spec file for Snake Game."""
 
+import sys
+
 a = Analysis(
     ['src/main.py'],
     pathex=[],
@@ -38,3 +40,13 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+
+# macOS app bundle
+if sys.platform == 'darwin':
+    app = BUNDLE(
+        exe,
+        name='snake-game.app',
+        icon=None,
+        bundle_identifier=None,
+        info_plist={'NSPrincipalClass': 'NSApplication'},
+    )
