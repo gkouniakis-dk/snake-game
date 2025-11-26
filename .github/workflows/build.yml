@@ -105,9 +105,6 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          release-files/snake-game.exe
-          release-files/snake-game-macos.zip
-          release-files/snake-game
+        files: release-files/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
