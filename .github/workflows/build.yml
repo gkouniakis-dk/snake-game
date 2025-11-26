@@ -61,13 +61,13 @@ jobs:
       with:
         path: release-files
 
+    - name: List artifacts
+      run: find release-files -type f
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          release-files/snake-game-windows/*
-          release-files/snake-game-macos/*
-          release-files/snake-game-linux/*
+        files: release-files/**/*
         draft: false
         prerelease: false
       env:
