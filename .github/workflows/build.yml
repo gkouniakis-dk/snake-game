@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-windows:
     name: Build Windows
@@ -111,8 +114,9 @@ jobs:
       run: |
         echo "=== Files in release-assets ==="
         ls -lah ./release-assets/
-        cd ./release-assets
         gh release create "${{ github.ref_name }}" \
           --title "Release ${{ github.ref_name }}" \
           --generate-notes \
-          snake-game.exe snake-game-macos.zip snake-game
+          ./release-assets/snake-game.exe \
+          ./release-assets/snake-game-macos.zip \
+          ./release-assets/snake-game
