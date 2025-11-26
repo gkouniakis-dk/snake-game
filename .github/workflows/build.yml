@@ -85,35 +85,24 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
     - uses: actions/checkout@v4
-    - name: Download Windows artifact
+    - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: windows-exe
-        path: ./release-files
-    - name: Download macOS artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: macos-app
-        path: ./release-files
-    - name: Download Linux artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: linux-exe
-        path: ./release-files
-    - name: List downloaded files
+        path: ./artifacts
+    - name: List all artifacts
       run: |
-        echo "Files in release-files:"
-        find ./release-files -type f
+        echo "=== All artifacts ==="
+        find ./artifacts -type f
         echo ""
-        echo "Creating release files list:"
-        find ./release-files -type f > /tmp/release_files.txt
-        cat /tmp/release_files.txt
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
+        echo "=== Flattening artifacts ==="
+        mkdir -p ./release-assets
+        find ./artifacts -type f -exec cp {} ./release-assets/ \;
+        ls -lah ./release-assets/
+    - name: Create Release with GitHub CLI
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        files: |
-          release-files/snake-game.exe
-          release-files/snake-game-macos.zip
-          release-files/snake-game
+      run: |
+        gh release create ${{ github.ref_name }} \
+          --title "Release ${{ github.ref_name }}" \
+          --generate-notes \
+          ./release-assets/*
