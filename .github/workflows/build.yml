@@ -45,13 +45,13 @@ jobs:
         pip install pyinstaller
     - name: Build with PyInstaller
       run: pyinstaller snake_game.spec
-    - name: List dist directory
-      run: ls -la dist/
+    - name: Zip macOS app
+      run: cd dist && zip -r snake-game-macos.zip snake-game.app && ls -lah *.zip
     - name: Upload macOS artifact
       uses: actions/upload-artifact@v4
       with:
         name: macos-app
-        path: dist/
+        path: dist/snake-game-macos.zip
 
   build-linux:
     name: Build Linux
@@ -104,7 +104,7 @@ jobs:
       with:
         files: |
           release-files/snake-game.exe
+          release-files/snake-game-macos.zip
           release-files/snake-game
-          release-files/snake-game.app
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
