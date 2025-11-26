@@ -101,10 +101,19 @@ jobs:
         name: linux-exe
         path: ./release-files
     - name: List downloaded files
-      run: find ./release-files -type f
+      run: |
+        echo "Files in release-files:"
+        find ./release-files -type f
+        echo ""
+        echo "Creating release files list:"
+        find ./release-files -type f > /tmp/release_files.txt
+        cat /tmp/release_files.txt
     - name: Create Release
       uses: softprops/action-gh-release@v1
-      with:
-        files: release-files/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: |
+          release-files/snake-game.exe
+          release-files/snake-game-macos.zip
+          release-files/snake-game
